@@ -1,0 +1,21 @@
+<svg class="cable-svg">
+  <g class="cable-group">
+    <path 
+      [attr.d]="pathData" 
+      [style.stroke]="cableColor"
+      class="cable-path"
+    />
+    <circle 
+      [attr.cx]="startPoint.x" 
+      [attr.cy]="startPoint.y" 
+      r="6" 
+      class="metal-plug"
+    />
+    <circle 
+      [attr.cx]="endPoint.x" 
+      [attr.cy]="endPoint.y" 
+      r="6" 
+      class="metal-plug"
+    />
+  </g>
+</svg>

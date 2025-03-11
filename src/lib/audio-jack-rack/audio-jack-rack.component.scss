@@ -1,0 +1,21 @@
+.audio-jack-rack {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 2.5rem;
+    align-items: center;
+    height: 24px;
+    padding: 0 4rem;
+}
+
+.jack-hole {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    border: 2px solid #333;
+    background: #222;
+    position: relative;
+}
+
+.connected {
+    background: #44ff44;
+}

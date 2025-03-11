@@ -1,0 +1,13 @@
+.audio-jack-hole {
+	width: 1rem;
+	height: 1rem;
+	border-radius: 50%;
+	border: 2px solid #333;
+	background: #222;
+	position: relative;
+	cursor:pointer;
+
+    .connected {
+		background: #44ff44;
+	}
+}
