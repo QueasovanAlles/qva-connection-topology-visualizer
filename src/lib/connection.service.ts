@@ -64,10 +64,50 @@ export class ConnectionService {
 		}
 	}
 
+	// Register jack holes with specified IDs and create a connection between them
+	registerJackHolesAndConnect(outputId: string, inputId: string, outputPosition?: any, inputPosition?: any): boolean {
+	  // Check if we need to register these jack holes
+	  const outputExists = this.isJackHoleRegistered(outputId);
+	  const inputExists = this.isJackHoleRegistered(inputId);
+	  
+	  // If positions aren't provided, create default placeholder positions
+	  // (they'll be updated when the actual components render)
+	  const defaultPosition = { x: 0, y: 0, width: 10, height: 10 };
+	  
+	  // Register output jack hole if it doesn't exist
+	  if (!outputExists) {
+		this.registerOrUpdateJackHole(
+		  outputId, 
+		  outputPosition || defaultPosition,
+		  InOut.OUTPUT
+		);
+	  }
+	  
+	  // Register input jack hole if it doesn't exist
+	  if (!inputExists) {
+		this.registerOrUpdateJackHole(
+		  inputId, 
+		  inputPosition || defaultPosition,
+		  InOut.INPUT
+		);
+	  }
+	  
+	  // Create the connection
+	  this.addConnection(outputId, InOut.OUTPUT);
+	  const connected = this.setConnection(outputId, inputId, InOut.INPUT);
+	  
+	  if (connected) {
+		this.drawCables('registerJackHolesAndConnect');
+		return true;
+	  }
+	  
+	  return false;
+	}
+
 	removeJackHole(id: string): void {
 	  this.jackHoles = this.jackHoles.filter(jh => jh.id !== id);
 	  this.removeConnection(id);
-	  this.drawCables();
+	  this.drawCables('removeJackHole');
 	}
 
     // Register or update a jack hole's position
@@ -78,8 +118,8 @@ export class ConnectionService {
 		} else {
 		  this.jackHoles.push({ id, position, inout});
 		}
-		console.log('Registered/Updated jack holes:', this.jackHoles);
-		this.drawCables(); // Redraw cables whenever a position updates
+		//console.log('Registered/Updated jack holes:', this.jackHoles);
+		this.drawCables('registerOrUpdateJackHole'); // Redraw cables whenever a position updates
 	}
 
 	addConnection(anId: string, inout: InOut): any {
@@ -89,7 +129,7 @@ export class ConnectionService {
 		inout: this.getOppositeInout(inout)  // meaning is : what we search
 	  };
 	  this.connections.push(connection);
-	  this.drawCables();
+	  this.drawCables('addConnection');
       return connection;
 	}
 
@@ -104,7 +144,7 @@ export class ConnectionService {
 		} else {
 		  connection.to = connectWithId;
 		}
-		this.drawCables();
+		this.drawCables('setConnection');
 		return true;
 	  }
 	  return false;
@@ -115,14 +155,14 @@ export class ConnectionService {
 	  this.connections = this.connections.filter(
 		conn => conn.from !== anId && conn.to !== anId
 	  );
-	  this.drawCables();
+	  this.drawCables('removeConnection');
 	}
    
 	cleanupUnConnected(): void {
 	  this.connections = this.connections.filter(
 		conn => conn.from !== '' && conn.to !== ''
 	  );
-	  this.drawCables();
+	  this.drawCables('cleanupUnConnected');
 	}
 
     cableChange(holeId: string, inout : InOut, left :number, top:number) {
@@ -146,10 +186,10 @@ export class ConnectionService {
 		  cablingConnection = existingConnection;
 		}
 		if (cablingConnection) {
-			this.drawCables();
+			this.drawCables('cableChange');
 			cablingConnection.x = left;cablingConnection.y=top;
 			this.cablingChange.emit(cablingConnection);
-			this.drawCables();
+			this.drawCables('cableChange');
 		}
 	}
 
@@ -191,7 +231,7 @@ export class ConnectionService {
 
 		this.cabling = false;
 		this.cablingChange.emit(null);
-		this.drawCables();
+		this.drawCables('handleCursorClick');
 	}
 
 	private findNearestCompatibleJack(x: number, y: number, inout: InOut): JackHolePosition | null {
@@ -206,6 +246,11 @@ export class ConnectionService {
 			}, 
 			null
 		  )?.jack || null;
+	}
+
+	isJackHoleRegistered(id: string): boolean {
+	  // Check if this jack hole ID already exists in the jackHoles array
+	  return this.jackHoles.some(jackHole => jackHole.id === id);
 	}
 
 	private getDistance(x: number, y: number, position: any): number {
@@ -229,7 +274,7 @@ export class ConnectionService {
 	    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 	}
 
-	private drawCables(): void {
+	private drawCables(callingFrom:string): void {
 		let newCables:any = [];
 		this.connections.forEach((connection : any) => {
 			const fromJack = this.jackHoles.find((jh) => jh.id === connection.from);
@@ -245,6 +290,7 @@ export class ConnectionService {
 		});
 		this.cables = newCables;
 		// Emit the updated cables array
+		console.log("drawCables called from : " + callingFrom);
 		this.cablesChanged.emit(this.cables);
 	}
 

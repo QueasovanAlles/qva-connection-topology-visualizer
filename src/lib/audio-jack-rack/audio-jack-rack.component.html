@@ -1,8 +1,30 @@
-<div class="audio-jack-rack">
-	<!--div class="jack-hole" 
-		 *ngFor="let connection of connections"
- 		 [@plugState]="connection.state"
-		 [class.connected]="connection.state === 'connected'"
-		 [attr.data-client-id]="getRackJackId(connection.peerId)">
-	</div-->
+<div class="rack-container" 
+     [style.width.vw]="width" 
+     [style.height.vh]="height"
+     [attr.data-rack-id]="id">
+  <!-- Title at the top (optional) -->
+  <div class="rack-title" *ngIf="showTitle">{{ title }}</div>
+  
+  <!-- Bottom row for inputs and outputs -->
+  <div class="ports-container">
+    <!-- Inputs (left side) -->
+    <div class="inputs" *ngIf="inputs > 0">
+      <span class="port-label">Inputs</span>
+      <app-audio-jack-hole 
+        *ngFor="let i of getInputsArray(); let idx = index" 
+        [inout]="InOut.INPUT"
+        [id]="id + '-input-' + idx">
+      </app-audio-jack-hole>
+    </div>
+    
+    <!-- Outputs (right side) -->
+    <div class="outputs" *ngIf="outputs > 0">
+      <span class="port-label">Outputs</span>
+      <app-audio-jack-hole 
+        *ngFor="let i of getOutputsArray(); let idx = index" 
+        [inout]="InOut.OUTPUT"
+        [id]="id + '-output-' + idx">
+      </app-audio-jack-hole>
+    </div>
+  </div>
 </div>
