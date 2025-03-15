@@ -1,24 +1,54 @@
-# QvaConnectionTopologyVisualizer
+# qva-connection-topology-visualizer
+Dynamic visualization module for audio routing and connection management. Create interactive patching interfaces with draggable devices, connection points, and animated cables.
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.0.0.
+![Image description](/docs/qva-connection-topology-visualizer.png)
 
-## Code scaffolding
+## Features
+-Drag-and-drop vritual audio cables into virtual devices
+-Visualisation with animated cable connections
+-Input/Output jack management
+-Available for implementing according to own needs
 
-Run `ng generate component component-name --project qva-connection-topology-visualizer` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project qva-connection-topology-visualizer`.
-> Note: Don't forget to add `--project qva-connection-topology-visualizer` or else it will be added to the default project in your `angular.json` file. 
 
-## Build
+## Installation
 
-Run `ng build qva-connection-topology-visualizer` to build the project. The build artifacts will be stored in the `dist/` directory.
+### Install via npm
 
-## Publishing
+npm install qva-connection-topology-visualizer
 
-After building your library with `ng build qva-connection-topology-visualizer`, go to the dist folder `cd dist/qva-connection-topology-visualizer` and run `npm publish`.
+```ts
+// In your module
+import { QvaConnectionTopologyVisualizerModule } from 'qva-connection-topology-visualizer';
 
-## Running unit tests
+@NgModule({
+  imports: [
+    QvaConnectionTopologyVisualizerModule
+  ]
+})
+export class AppModule { }
 
-Run `ng test qva-connection-topology-visualizer` to execute the unit tests via [Karma](https://karma-runner.github.io).
+// In your component template
+<qva-audio-jack-rack [config]="rackConfig">
+  <qva-audio-jack-hole type="input" label="Audio In"></qva-audio-jack-hole>
+  <qva-audio-jack-hole type="output" label="Audio Out"></qva-audio-jack-hole>
+</qva-audio-jack-rack>
+```
 
-## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+### Running the demo
+
+[QvA Connection Topology Visualizer Demo](https://github.com/QueasovanAlles/qva-connection-topology-visualizer-demo) -- todo
+
+
+## Usage
+Import the module and start creating your audio routing interface with minimal setup. Full documentation and examples available in the demo repository.
+
+### Used in other QvA projects
+[QvA Connection Topology Visualizer Demo](https://github.com/QueasovanAlles/qva-connection-topology-visualizer-demo)  -- TODO
+QvAHub Monitor - not yet released
+
+### Using other QvA projects
+No. This is an endpoint.
+
+[Watch Demo on YouTube](https://www.youtube.com/watch?v=your-video-id)  -- TODO
+
